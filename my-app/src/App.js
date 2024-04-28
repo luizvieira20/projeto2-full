@@ -1,5 +1,7 @@
 import React, { useState, createContext, useContext } from 'react';
 import './App.css';
+import Button from '@mui/material/Button'; // Importando o componente Button do Material-UI
+import { createTheme, ThemeProvider } from '@mui/material/styles'; // Importando temas e estilos do Material-UI
 
 const AdviceContext = createContext();
 
@@ -56,36 +58,46 @@ function AdviceProvider({ children }) {
 }
 
 function RandomAdviceDisplay() {
-  const { randomAdvice,buscarConselhoAleatorio, buscarConselhoPorId, buscarConselhoPorPalavra, error } = useContext(AdviceContext);
+  const { randomAdvice, searchResults, buscarConselhoAleatorio, buscarConselhoPorId, buscarConselhoPorPalavra, error } = useContext(AdviceContext);
   const [adviceId, setAdviceId] = useState('');
   const [searchWord, setSearchWord] = useState('');
-  const [searchResults] = useState([]);
 
   return (
     <div>
       <p>Conselho Aleatório: {randomAdvice}</p>
-      <button onClick={buscarConselhoAleatorio}>Obter Conselho Aleatório</button>
+      <Button variant="contained" color="primary" onClick={buscarConselhoAleatorio}>
+        Obter Conselho Aleatório
+      </Button>
 
       <hr />
 
+      <p>
       <input
         type="number"
         placeholder="Digite o ID do conselho"
         value={adviceId}
         onChange={(e) => setAdviceId(e.target.value)}
       />
-      <button onClick={() => buscarConselhoPorId(adviceId)}>Obter Conselho por ID</button>
+      </p>
+      <Button variant="contained" color="primary" onClick={() => buscarConselhoPorId(adviceId)}>
+        Obter Conselho por ID
+      </Button>
       {error && <p className="error">{error}</p>}
 
       <hr />
 
+      <p>
       <input
         type="text"
         placeholder="Digite uma palavra para buscar"
         value={searchWord}
+        size="23"
         onChange={(e) => setSearchWord(e.target.value)}
       />
-      <button onClick={() => buscarConselhoPorPalavra(searchWord)}>Buscar Conselho</button>
+      </p>
+      <Button variant="contained" color="primary" onClick={() => buscarConselhoPorPalavra(searchWord)}>
+        Buscar Conselho
+      </Button>
       {searchResults.length > 0 && (
         <ul>
           {searchResults.map((resultado, index) => (
@@ -99,13 +111,23 @@ function RandomAdviceDisplay() {
 }
 
 function App() {
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#007bff',
+      },
+    },
+  });
+
   return (
-    <div className="App">
-      <h1>App de Conselhos</h1>
-      <AdviceProvider>
-        <RandomAdviceDisplay />
-      </AdviceProvider>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <h1>App de Conselhos</h1>
+        <AdviceProvider>
+          <RandomAdviceDisplay />
+        </AdviceProvider>
+      </div>
+    </ThemeProvider>
   );
 }
 
